@@ -4,7 +4,7 @@ import {
   jwtMiddleware,
 } from "https://deno.land/x/oak_middleware_jwt@2.2.2/mod.ts"
 import { APP_PORT } from "./config.ts"
-import { secretKey } from "./utils/utils.ts"
+import { getAuthToken, secretKey } from "./utils/utils.ts"
 import schemaRouter from "./routes/schema.ts"
 
 const app = new Application()
@@ -46,5 +46,5 @@ app.listen({ port: Number(APP_PORT) })
 console.log(`Listening on port: ${APP_PORT}...`)
 
 // Get auth token
-// const { token, payload } = await getAuthToken()
-// console.log("getAuthToken", token, payload)
+const { token, payload } = await getAuthToken()
+console.log("Auth Token:", token, payload)
