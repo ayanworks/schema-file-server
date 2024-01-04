@@ -1,6 +1,6 @@
 import { Header, Payload, create } from "https://deno.land/x/djwt@v3.0.1/mod.ts"
 import * as base64 from "https://deno.land/std@0.207.0/encoding/base64.ts"
-import { JWT_TOKEN_SECRET } from "../config.ts"
+import { ISSUER, JWT_TOKEN_SECRET } from "../config.ts"
 
 export const secretKey = await crypto.subtle.importKey(
   "raw",
@@ -17,7 +17,7 @@ const header: Header = {
 
 export const getAuthToken = async () => {
   const payload: Payload = {
-    iss: "AyanWorks",
+    iss: ISSUER,
     id: crypto.randomUUID(),
   }
 
