@@ -2,6 +2,7 @@ import {
   Response as Res,
   Request,
 } from "https://deno.land/x/oak@v12.6.1/mod.ts"
+import { existsSync } from "https://deno.land/std@0.209.0/fs/mod.ts"
 
 export default {
   createSchema: async ({
@@ -24,10 +25,26 @@ export default {
       return
     }
 
-    await Deno.writeTextFile(
-      `schemas/${data?.schemaId}.json`,
-      JSON.stringify(data.schema, null, 2)
-    )
+    const filePath = `schemas/${data?.schemaId}.json`
+
+    const pathFound = existsSync(filePath)
+
+    if (pathFound) {
+      console.log(
+        `Schema already exists in the system with id: ${data?.schemaId}}`
+      )
+      response.status = 400
+      response.body = {
+        success: false,
+        message: "Schema already exists",
+        data: null,
+      }
+      return
+    }
+
+    console.log(`Creating schema with id: ${data?.schemaId} on system`)
+
+    await Deno.writeTextFile(filePath, JSON.stringify(data.schema, null, 2), {})
 
     response.body = {
       success: true,
