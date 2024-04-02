@@ -80,6 +80,6 @@ export default {
     // Build and send the response
     const result = new Response(readableStream)
 
-    response.body = result.body
+    response.body = await result.json()
   },
 }
