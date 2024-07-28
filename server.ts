@@ -6,8 +6,7 @@ import {
 import { APP_PORT } from "./config.ts"
 import { getAuthToken, secretKey } from "./utils/utils.ts"
 import schemaRouter from "./routes/schema.ts"
-
-const app = new Application()
+import { oakCors } from "https://deno.land/x/cors/mod.ts"
 
 const ignorePatterns: IgnorePattern[] = [
   {
@@ -23,6 +22,10 @@ const ignorePatterns: IgnorePattern[] = [
     methods: ["GET"],
   },
 ]
+
+const app = new Application()
+
+app.use(oakCors({ origin: "*" }))
 
 app.use(
   jwtMiddleware<Middleware>({
