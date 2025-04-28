@@ -5,7 +5,7 @@ WORKDIR /app
 
 USER deno
 
-#COPY server.ts .6
+#COPY server.ts
 COPY . .
 
 # Ensure proper permissions during container runtime
