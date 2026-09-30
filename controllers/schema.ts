@@ -60,16 +60,33 @@ export default {
     request: Request
   }) => {
     const url = new URL(request.url)
-    const filepath = decodeURIComponent(url.pathname)
+    const id = decodeURIComponent(url.pathname)
+      .replace(/^\/schemas\//, "")
+      .replace(/\.json$/, "")
+
+    if (!/^[a-zA-Z0-9_-]+$/.test(id)) {
+      response.status = 400
+      response.body = {
+        success: false,
+        message: "Invalid schema id",
+        data: null,
+      }
+      return
+    }
+
+    const filepath = `schemas/${id}.json`
 
     // Try opening the file
     let file
     try {
-      file = await Deno.open("." + filepath + ".json", { read: true })
+      file = await Deno.open(filepath, { read: true })
     } catch {
-      // If the file cannot be opened, return a "404 Not Found" response
-      const notFoundResponse = new Response("404 Not Found", { status: 404 })
-      response.body = notFoundResponse.body
+      response.status = 404
+      response.body = {
+        success: false,
+        message: "Schema not found",
+        data: null,
+      }
       return
     }
 
